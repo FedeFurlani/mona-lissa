@@ -1,3 +1,4 @@
+import { asset } from "../lib/assets";
 import { catalogRequestMessage, whatsappUrl } from "../lib/whatsapp";
 import { IconWhatsApp } from "./Icons";
 
@@ -31,10 +32,10 @@ export function Hero() {
       </div>
       <div className="hero-visual">
         <div className="seal">
-          <img src="/images/logo.png" alt="Mona Lissa Fragancias" />
+          <img src={asset("/images/logo.png")} alt="Mona Lissa Fragancias" />
         </div>
-        <img className="hero-shot shot-a" src="/images/productos-saphirus.png" alt="Productos Saphirus" />
-        <img className="hero-shot shot-b" src="/images/productos-grid.png" alt="Textiles, ambientes y auto" />
+        <img className="hero-shot shot-a" src={asset("/images/productos-saphirus.png")} alt="Productos Saphirus" />
+        <img className="hero-shot shot-b" src={asset("/images/productos-grid.png")} alt="Textiles, ambientes y auto" />
       </div>
     </section>
   );

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { categories, products } from "../data/catalog";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/money";
+import { asset } from "../lib/assets";
 import { consultProductMessage, whatsappUrl } from "../lib/whatsapp";
 import type { CategoryId, Product } from "../types";
 import { BottleMark, IconClose, IconHeart, IconSearch, IconWhatsApp } from "./Icons";
@@ -133,7 +134,7 @@ function ProductCard({
     <article className="card">
       <button className="card-visual" type="button" onClick={onOpen} style={{ background: product.color }}>
         {product.image ? (
-          <img src={product.image} alt="" />
+          <img src={asset(product.image)} alt="" />
         ) : (
           <BottleMark color={product.accent} />
         )}
@@ -200,7 +201,7 @@ function ProductModal({
           <IconClose />
         </button>
         <div className="modal-visual" style={{ background: product.color }}>
-          {product.image ? <img src={product.image} alt="" /> : <BottleMark color={product.accent} />}
+          {product.image ? <img src={asset(product.image)} alt="" /> : <BottleMark color={product.accent} />}
         </div>
         <div className="modal-body">
           <p className="brand-line">{product.brand}</p>

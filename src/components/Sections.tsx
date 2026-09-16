@@ -4,6 +4,7 @@ import { whatsappUrl } from "../lib/whatsapp";
 import { formatPrice } from "../lib/money";
 import { useCart } from "../context/CartContext";
 import { OWNER, WHATSAPP_DISPLAY } from "../config";
+import { asset } from "../lib/assets";
 import { IconWhatsApp } from "./Icons";
 
 export function Combos() {
@@ -55,7 +56,7 @@ export function News() {
       <div className="news-grid">
         {news.map((item) => (
           <article key={item.id} className="news-card">
-            {item.image && <img src={item.image} alt="" />}
+            {item.image && <img src={asset(item.image)} alt="" />}
             <div>
               <p className="tag">
                 {item.tag} · {item.date}
@@ -122,8 +123,8 @@ export function About() {
         </a>
       </div>
       <div className="about-visual">
-        <img src="/images/logo.png" alt="Mona Lissa" />
-        <img src="/images/productos-grid.png" alt="Productos" />
+        <img src={asset("/images/logo.png")} alt="Mona Lissa" />
+        <img src={asset("/images/productos-grid.png")} alt="Productos" />
       </div>
     </section>
   );
@@ -132,7 +133,7 @@ export function About() {
 export function Footer() {
   return (
     <footer className="site-footer">
-      <img src="/images/logo.png" alt="" />
+      <img src={asset("/images/logo.png")} alt="" />
       <div>
         <strong>Mona Lissa Fragancias</strong>
         <p>Saphirus y Avon · Salud y belleza · Coordinamos entrega</p>

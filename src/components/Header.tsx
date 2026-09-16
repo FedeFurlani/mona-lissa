@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BRAND, WHATSAPP_DISPLAY } from "../config";
 import { useCart } from "../context/CartContext";
 import { whatsappUrl } from "../lib/whatsapp";
+import { asset } from "../lib/assets";
 import { IconCart, IconClose, IconWhatsApp } from "./Icons";
 
 type Props = {
@@ -24,7 +25,7 @@ export function Header({ onOpenCart }: Props) {
     <header className="site-header">
       <div className="header-inner">
         <a className="brand" href="#inicio" onClick={() => setOpen(false)}>
-          <img src="/images/logo.png" alt={BRAND} />
+          <img src={asset("/images/logo.png")} alt={BRAND} />
           <span>
             <strong>Mona Lissa</strong>
             <small>Fragancias</small>
