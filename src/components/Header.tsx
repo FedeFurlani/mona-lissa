@@ -10,9 +10,10 @@ type Props = {
 };
 
 const links = [
-  ["#catalogo", "Catálogo"],
-  ["#novedades", "Novedades"],
-  ["#combos", "Combos"],
+  ["#catalogo", "Saphirus"],
+  ["#avon", "Avon"],
+  // ["#novedades", "Novedades"],
+  // ["#combos", "Combos"],
   ["#como-pedir", "Cómo pedir"],
   ["#ana", "Ana"],
 ] as const;

@@ -2,13 +2,12 @@ import { news } from "../data/news";
 import { products } from "../data/catalog";
 import { whatsappUrl } from "../lib/whatsapp";
 import { formatPrice } from "../lib/money";
-import { useCart } from "../context/CartContext";
 import { OWNER, WHATSAPP_DISPLAY } from "../config";
+import { PedidoControls } from "./PedidoControls";
 import { asset } from "../lib/assets";
 import { IconWhatsApp } from "./Icons";
 
 export function Combos() {
-  const { add } = useCart();
   const combos = products.filter((product) => product.category === "combos");
 
   return (
@@ -33,10 +32,8 @@ export function Combos() {
                 {formatPrice(product.price)}
                 {product.compareAt && <s>{formatPrice(product.compareAt)}</s>}
               </strong>
-              <button className="btn btn-tiny" type="button" onClick={() => add(product.id, 1, product.variants?.[0])}>
-                Sumar
-              </button>
             </div>
+            <PedidoControls product={product} variant={product.variants?.[0]} />
           </article>
         ))}
       </div>
@@ -77,29 +74,29 @@ export function HowItWorks() {
       <div className="section-head">
         <div>
           <p className="eyebrow">Cómo pedir</p>
-          <h2>Cuatro pasos y el aroma está en camino.</h2>
+          <h2>Armá el pedido y mandalo por WhatsApp.</h2>
         </div>
       </div>
       <ol className="steps">
         <li>
           <span>01</span>
           <h3>Recorré el catálogo</h3>
-          <p>Filtrá por textiles, auto, equipos o Avon. Si no ves un aroma, consultame igual.</p>
+          <p>Elegí algo de Saphirus o de Avon y tocá Agregar al pedido.</p>
         </li>
         <li>
           <span>02</span>
-          <h3>Armá el carrito</h3>
-          <p>Sumá cantidades y variantes. El carrito se guarda en este celular.</p>
+          <h3>Ajustá cantidades</h3>
+          <p>Con Otro y Quitar armás exactamente lo que querés. El pedido se guarda en este celular.</p>
         </li>
         <li>
           <span>03</span>
           <h3>Mandalo por WhatsApp</h3>
-          <p>Completá tu nombre y zona. El pedido me llega a {WHATSAPP_DISPLAY}.</p>
+          <p>Confirmá el detalle y se abre el mensaje a {WHATSAPP_DISPLAY}.</p>
         </li>
         <li>
           <span>04</span>
-          <h3>Coordinamos entrega</h3>
-          <p>Confirmamos stock, precio y cómo lo recibís. Pago a convenir.</p>
+          <h3>La entrega se acuerda después</h3>
+          <p>Después del pedido coordinamos stock, pago y cómo lo recibís.</p>
         </li>
       </ol>
     </section>
@@ -133,23 +130,24 @@ export function About() {
 export function Footer() {
   return (
     <footer className="site-footer">
-      <img src={asset("/images/logo.png")} alt="" />
-      <div>
-        <strong>Mona Lissa Fragancias</strong>
-        <p>Saphirus y Avon · Salud y belleza · Coordinamos entrega</p>
+      <div className="footer-inner">
+        <div className="footer-brand">
+          <img src={asset("/images/logo.png")} alt="" />
+          <div>
+            <strong>Mona Lissa</strong>
+            <p>Fragancias · Saphirus y Avon</p>
+            <p className="footer-note">Ana coordina la entrega después de tu pedido.</p>
+          </div>
+        </div>
+        <a className="footer-wa" href={whatsappUrl("Hola Ana! 🌸")} target="_blank" rel="noreferrer">
+          <IconWhatsApp size={22} />
+          <span>
+            <small>WhatsApp</small>
+            <b>{WHATSAPP_DISPLAY}</b>
+          </span>
+        </a>
       </div>
-      <a href={whatsappUrl("Hola Ana! 🌸")} target="_blank" rel="noreferrer">
-        WhatsApp {WHATSAPP_DISPLAY}
-      </a>
     </footer>
   );
 }
 
-export function WhatsAppFab() {
-  return (
-    <a className="fab" href={whatsappUrl("Hola Ana! 🌸 Vi el catálogo de Mona Lissa y quería consultarte.")} target="_blank" rel="noreferrer">
-      <IconWhatsApp size={26} />
-      <span>WhatsApp</span>
-    </a>
-  );
-}

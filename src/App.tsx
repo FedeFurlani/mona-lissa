@@ -4,8 +4,8 @@ import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { Catalog } from "./components/Catalog";
 import { CartDrawer } from "./components/CartDrawer";
-import { About, Combos, Footer, HowItWorks, News, WhatsAppFab } from "./components/Sections";
-import { useCart } from "./context/CartContext";
+import { PedidoFab } from "./components/PedidoFab";
+import { About, Footer, HowItWorks } from "./components/Sections";
 
 export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -15,28 +15,21 @@ export default function App() {
       <Header onOpenCart={() => setCartOpen(true)} />
       <main>
         <Hero />
-        <Marquee />
+        {/* <Marquee /> */}
         <Catalog />
-        <Combos />
-        <News />
+        {/* <Combos /> */}
+        {/* <News /> */}
         <HowItWorks />
         <About />
       </main>
       <Footer />
-      <WhatsAppFab />
-      <Toast />
+      <PedidoFab onOpen={() => setCartOpen(true)} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </CartProvider>
   );
 }
 
-function Toast() {
-  const { toast } = useCart();
-  if (!toast) return null;
-  return <div className="toast">Sumado: {toast}</div>;
-}
-
-function Marquee() {
+/* function Marquee() {
   const words = [
     "Hawaii",
     "Paula",
@@ -59,4 +52,4 @@ function Marquee() {
       </div>
     </div>
   );
-}
+} */

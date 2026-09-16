@@ -1,15 +1,16 @@
-import type { CategoryId, Product } from "../types";
+import type { Product } from "../types";
 
-export const categories: { id: CategoryId | "todos"; label: string }[] = [
+export const saphirusCategories = [
   { id: "todos", label: "Todo" },
   { id: "textiles", label: "Textiles" },
   { id: "ambientes", label: "Ambientes" },
   { id: "auto", label: "Para el auto" },
   { id: "equipos", label: "Equipos" },
   { id: "aceites", label: "Aceites" },
-  { id: "avon", label: "Avon" },
-  { id: "combos", label: "Combos" },
-];
+  { id: "favoritos", label: "Favoritos" },
+] as const;
+
+export type SaphirusFilterId = (typeof saphirusCategories)[number]["id"];
 
 const textil = (
   id: string,

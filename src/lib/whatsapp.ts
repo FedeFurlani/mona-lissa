@@ -1,6 +1,6 @@
-import { BRAND_FULL, OWNER, WHATSAPP_NUMBER } from "../config";
+import { BRAND, OWNER, WHATSAPP_NUMBER } from "../config";
 import { productById } from "../data/catalog";
-import type { CartItem, CheckoutForm } from "../types";
+import type { CartItem } from "../types";
 import { formatPrice } from "./money";
 
 export function whatsappUrl(text: string): string {
@@ -9,35 +9,46 @@ export function whatsappUrl(text: string): string {
 
 export function consultProductMessage(name: string, variant?: string): string {
   const extra = variant ? ` (${variant})` : "";
-  return `Hola ${OWNER}! 🌸 Vi *${name}*${extra} en el catálogo de ${BRAND_FULL} y quería consultarte stock y entrega.`;
+  return `Hola ${OWNER}! 🌸 Vi *${name}*${extra} en el catálogo de ${BRAND} y quería consultarte stock y entrega.`;
 }
 
 export function catalogRequestMessage(): string {
-  return `Hola ${OWNER}! 🌸 Soy de ${BRAND_FULL}. ¿Me pasás el catálogo de Avon vigente y me contás cómo armar el pedido?`;
+  return `Hola ${OWNER}! 🌸 Soy de ${BRAND}. ¿Me pasás el catálogo de Avon vigente y me contás cómo armar el pedido?`;
 }
 
-export function buildOrderMessage(items: CartItem[], form: CheckoutForm, total: number): string {
-  const lines = items.map((item) => {
+export function orderLines(items: CartItem[]): string[] {
+  return items
+    .filter((item) => item.quantity > 0)
+    .map((item) => {
+      const product = productById[item.productId];
+      const variant = item.variant ? ` — ${item.variant}` : "";
+      const subtotal = product.price === 0 ? "a confirmar" : formatPrice(product.price * item.quantity);
+      return `${item.quantity} × ${product.name}${variant} — ${subtotal}`;
+    });
+}
+
+export function buildOrderMessage(items: CartItem[], total: number): string {
+  const pedidos = items.filter((item) => item.quantity > 0);
+  const sinPrecio = pedidos.some((item) => (productById[item.productId]?.price ?? 0) === 0);
+  const lineas = pedidos.map((item) => {
     const product = productById[item.productId];
-    const variant = item.variant ? ` — ${item.variant}` : "";
-    const lineTotal = product.price * item.quantity;
-    const priceBit = product.price === 0 ? "consulta" : formatPrice(lineTotal);
-    return `• ${item.quantity}× ${product.name}${variant} (${priceBit})`;
+    const variant = item.variant ? ` ${item.variant}` : "";
+    const subtotal = product.price === 0 ? "a confirmar" : formatPrice(product.price * item.quantity);
+    return `👉 *${item.quantity}x* ${product.name}${variant} — ${subtotal}`;
   });
 
-  const delivery = form.delivery === "entrega" ? "Coordinar entrega" : "Retiro a convenir";
-
-  return [
-    `Hola ${OWNER}! 🌸 Quiero hacer un pedido en *${BRAND_FULL}*`,
+  const partes = [
+    `¡Hola ${BRAND}! 🌸`,
+    "Quiero realizar el siguiente pedido:",
     "",
-    ...lines,
+    ...lineas,
     "",
-    `*Total estimado:* ${formatPrice(total)}`,
-    "_Los precios se confirman al armar el pedido._",
-    "",
-    `*Nombre:* ${form.name}`,
-    `*Zona:* ${form.zone || "A coordinar"}`,
-    `*Modalidad:* ${delivery}`,
-    form.notes ? `*Notas:* ${form.notes}` : "*Notas:* —",
-  ].join("\n");
+  ];
+  if (total > 0) partes.push(`*Subtotal: ${formatPrice(total)}*`);
+  partes.push("Entrega: a acordar después del pedido");
+  if (total > 0) {
+    partes.push(`*Total: ${formatPrice(total)}*${sinPrecio ? " (hay productos sin precio en la lista)" : ""}`);
+  }
+  partes.push("", "¿Me confirmarían disponibilidad? ¡Gracias!");
+  return partes.join("\n");
 }

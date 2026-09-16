@@ -43,10 +43,3 @@ export type NewsItem = {
   body: string;
   image?: string;
 };
-
-export type CheckoutForm = {
-  name: string;
-  zone: string;
-  delivery: "entrega" | "retiro";
-  notes: string;
-};

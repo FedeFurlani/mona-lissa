@@ -13,12 +13,14 @@ import type { CartItem } from "../types";
 type CartContextValue = {
   items: CartItem[];
   add: (productId: string, quantity?: number, variant?: string) => void;
+  decrement: (productId: string, variant?: string) => void;
   setQuantity: (key: string, quantity: number) => void;
   remove: (key: string) => void;
   clear: () => void;
+  quantityOf: (productId: string, variant?: string) => number;
   count: number;
   total: number;
-  toast: string | null;
+  bump: number;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -38,7 +40,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  const [toast, setToast] = useState<string | null>(null);
+  const [bump, setBump] = useState(0);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -46,7 +48,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const add = useCallback((productId: string, quantity = 1, variant?: string) => {
     const key = itemKey(productId, variant);
-    const product = productById[productId];
     setItems((prev) => {
       const found = prev.find((item) => item.key === key);
       if (found) {
@@ -56,8 +57,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { key, productId, quantity, variant }];
     });
-    setToast(product?.name ?? "Producto sumado");
-    window.setTimeout(() => setToast(null), 1800);
+    setBump((n) => n + 1);
+  }, []);
+
+  const decrement = useCallback((productId: string, variant?: string) => {
+    setItems((prev) => {
+      const target = variant
+        ? prev.find((item) => item.productId === productId && item.variant === variant)
+        : [...prev].reverse().find((item) => item.productId === productId);
+      if (!target) return prev;
+      if (target.quantity <= 1) return prev.filter((item) => item.key !== target.key);
+      return prev.map((item) =>
+        item.key === target.key ? { ...item, quantity: item.quantity - 1 } : item,
+      );
+    });
   }, []);
 
   const setQuantity = useCallback((key: string, quantity: number) => {
@@ -82,9 +95,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items],
   );
 
+  const quantityOf = useCallback(
+    (productId: string, variant?: string) =>
+      items
+        .filter((item) => item.productId === productId && (variant == null || item.variant === variant))
+        .reduce((sum, item) => sum + item.quantity, 0),
+    [items],
+  );
+
   const value = useMemo(
-    () => ({ items, add, setQuantity, remove, clear, count, total, toast }),
-    [items, add, setQuantity, remove, clear, count, total, toast],
+    () => ({ items, add, decrement, setQuantity, remove, clear, quantityOf, count, total, bump }),
+    [items, add, decrement, setQuantity, remove, clear, quantityOf, count, total, bump],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

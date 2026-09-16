@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { categories, products } from "../data/catalog";
-import { useCart } from "../context/CartContext";
+import { products, saphirusCategories, type SaphirusFilterId } from "../data/catalog";
 import { formatPrice } from "../lib/money";
 import { asset } from "../lib/assets";
-import { consultProductMessage, whatsappUrl } from "../lib/whatsapp";
-import type { CategoryId, Product } from "../types";
+import { catalogRequestMessage, consultProductMessage, whatsappUrl } from "../lib/whatsapp";
+import type { Product } from "../types";
 import { BottleMark, IconClose, IconHeart, IconSearch, IconWhatsApp } from "./Icons";
+import { PedidoControls } from "./PedidoControls";
 
 const FAV_KEY = "mona-lissa-favs";
 
@@ -17,26 +17,35 @@ function readFavs(): string[] {
   }
 }
 
+function matchesQuery(product: Product, query: string) {
+  if (!query) return true;
+  return [product.name, product.brand, product.scent, product.description]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .includes(query);
+}
+
 export function Catalog() {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<CategoryId | "todos">("todos");
+  const [filter, setFilter] = useState<SaphirusFilterId>("todos");
   const [selected, setSelected] = useState<Product | null>(null);
   const [favs, setFavs] = useState<string[]>(readFavs);
-  const [onlyFavs, setOnlyFavs] = useState(false);
 
-  const list = useMemo(() => {
-    const q = query.trim().toLowerCase();
+  const q = query.trim().toLowerCase();
+
+  const saphirusList = useMemo(() => {
     return products.filter((product) => {
-      if (onlyFavs && !favs.includes(product.id)) return false;
-      if (category !== "todos" && product.category !== category) return false;
-      if (!q) return true;
-      return [product.name, product.brand, product.scent, product.description]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase()
-        .includes(q);
+      if (product.category === "avon" || product.category === "combos") return false;
+      if (filter === "favoritos" && !favs.includes(product.id)) return false;
+      if (filter !== "todos" && filter !== "favoritos" && product.category !== filter) return false;
+      return matchesQuery(product, q);
     });
-  }, [query, category, onlyFavs, favs]);
+  }, [q, filter, favs]);
+
+  const avonList = useMemo(() => {
+    return products.filter((product) => product.category === "avon" && matchesQuery(product, q));
+  }, [q]);
 
   function toggleFav(id: string) {
     setFavs((prev) => {
@@ -47,62 +56,75 @@ export function Catalog() {
   }
 
   return (
-    <section className="catalog" id="catalogo">
-      <div className="section-head">
-        <div>
-          <p className="eyebrow">El catálogo</p>
-          <h2>Elegí, sumá al carrito y mandame el pedido.</h2>
+    <>
+      <section className="catalog" id="catalogo">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">Saphirus</p>
+            <h2>Textiles, ambientes, auto y equipos.</h2>
+          </div>
+          <p className="section-note">
+            Los precios son de referencia. La entrega se acuerda después de hacer el pedido.
+          </p>
         </div>
-        <p className="section-note">
-          Los precios son de referencia y los confirmo por WhatsApp según stock y campaña.
-        </p>
-      </div>
 
-      <div className="filters">
-        <label className="search">
-          <IconSearch />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar aroma, marca o producto"
-          />
-        </label>
-        <div className="chips">
-          {categories.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={category === item.id ? "chip active" : "chip"}
-              onClick={() => setCategory(item.id)}
-            >
-              {item.label}
-            </button>
-          ))}
-          <button
-            type="button"
-            className={onlyFavs ? "chip active" : "chip"}
-            onClick={() => setOnlyFavs((v) => !v)}
-          >
-            Favoritos
-          </button>
-        </div>
-      </div>
-
-      {list.length === 0 ? (
-        <p className="empty">No encontré eso. Probá otro aroma o pedime el catálogo Avon.</p>
-      ) : (
-        <div className="grid">
-          {list.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              fav={favs.includes(product.id)}
-              onFav={() => toggleFav(product.id)}
-              onOpen={() => setSelected(product)}
+        <div className="filters">
+          <label className="search">
+            <IconSearch />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar aroma o producto"
             />
-          ))}
+          </label>
+          <div className="chips">
+            {saphirusCategories.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={filter === item.id ? "chip active" : "chip"}
+                onClick={() => setFilter(item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
-      )}
+
+        {saphirusList.length === 0 ? (
+          <p className="empty">
+            {filter === "favoritos" && !q
+              ? "Todavía no marcaste favoritos. Tocá el corazón en un producto para guardarlo acá."
+              : "No encontré eso. Probá otro aroma."}
+          </p>
+        ) : (
+          <ProductGrid
+            products={saphirusList}
+            favs={favs}
+            onFav={toggleFav}
+            onOpen={setSelected}
+          />
+        )}
+      </section>
+
+      <section className="catalog avon-catalog" id="avon">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">Avon</p>
+            <h2>Fragancias y el catálogo de campaña.</h2>
+          </div>
+          <a className="btn btn-pink" href={whatsappUrl(catalogRequestMessage())} target="_blank" rel="noreferrer">
+            <IconWhatsApp size={18} />
+            Pedir catálogo Avon
+          </a>
+        </div>
+
+        {avonList.length === 0 ? (
+          <p className="empty">No encontré eso en Avon. Pedime el catálogo de la campaña.</p>
+        ) : (
+          <ProductGrid products={avonList} favs={favs} onFav={toggleFav} onOpen={setSelected} />
+        )}
+      </section>
 
       {selected && (
         <ProductModal
@@ -112,7 +134,33 @@ export function Catalog() {
           onClose={() => setSelected(null)}
         />
       )}
-    </section>
+    </>
+  );
+}
+
+function ProductGrid({
+  products: list,
+  favs,
+  onFav,
+  onOpen,
+}: {
+  products: Product[];
+  favs: string[];
+  onFav: (id: string) => void;
+  onOpen: (product: Product) => void;
+}) {
+  return (
+    <div className="grid">
+      {list.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          fav={favs.includes(product.id)}
+          onFav={() => onFav(product.id)}
+          onOpen={() => onOpen(product)}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -127,9 +175,6 @@ function ProductCard({
   onFav: () => void;
   onOpen: () => void;
 }) {
-  const { add } = useCart();
-  const needsVariant = Boolean(product.variants?.length);
-
   return (
     <article className="card">
       <button className="card-visual" type="button" onClick={onOpen} style={{ background: product.color }}>
@@ -156,19 +201,11 @@ function ProductCard({
             {formatPrice(product.price)}
             {product.compareAt && <s>{formatPrice(product.compareAt)}</s>}
           </strong>
-          <div className="card-actions">
-            <button className={fav ? "icon-btn on" : "icon-btn"} type="button" onClick={onFav} aria-label="Favorito">
-              <IconHeart filled={fav} />
-            </button>
-            <button
-              className="btn btn-tiny"
-              type="button"
-              onClick={() => (needsVariant ? onOpen() : add(product.id))}
-            >
-              {needsVariant ? "Elegir" : "Sumar"}
-            </button>
-          </div>
+          <button className={fav ? "icon-btn on" : "icon-btn"} type="button" onClick={onFav} aria-label="Favorito">
+            <IconHeart filled={fav} />
+          </button>
         </div>
+        <PedidoControls product={product} onNeedVariant={onOpen} />
       </div>
     </article>
   );
@@ -185,14 +222,7 @@ function ProductModal({
   onFav: () => void;
   onClose: () => void;
 }) {
-  const { add } = useCart();
   const [variant, setVariant] = useState(product.variants?.[0] ?? "");
-  const [qty, setQty] = useState(1);
-
-  function addToCart() {
-    add(product.id, qty, product.variants ? variant : undefined);
-    onClose();
-  }
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -218,22 +248,11 @@ function ProductModal({
               </select>
             </label>
           )}
-          <div className="qty">
-            <button type="button" onClick={() => setQty((n) => Math.max(1, n - 1))}>
-              −
-            </button>
-            <span>{qty}</span>
-            <button type="button" onClick={() => setQty((n) => n + 1)}>
-              +
-            </button>
-            <strong>{formatPrice(product.price * Math.max(qty, 1))}</strong>
-          </div>
+          <p className="modal-price">{formatPrice(product.price)}</p>
           <div className="modal-actions">
-            <button className="btn btn-dark" type="button" onClick={addToCart}>
-              {product.price === 0 ? "Pedir consulta" : "Sumar al carrito"}
-            </button>
+            <PedidoControls product={product} variant={product.variants ? variant : undefined} />
             <a
-              className="btn btn-pink"
+              className="btn btn-ghost"
               href={whatsappUrl(consultProductMessage(product.name, variant || undefined))}
               target="_blank"
               rel="noreferrer"
