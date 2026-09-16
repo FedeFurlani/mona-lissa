@@ -203,7 +203,7 @@ p {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .ghost-link {
@@ -1455,6 +1455,21 @@ h1 em {
     gap: 10px;
     min-height: 64px;
     position: relative;
+  }
+
+  .header-actions {
+    margin-left: auto;
+    gap: 10px;
+  }
+
+  .header-actions .ghost-link {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--paper);
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   .brand img {
