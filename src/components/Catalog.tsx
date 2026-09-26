@@ -61,7 +61,7 @@ export function Catalog() {
         <div className="section-head">
           <div>
             <p className="eyebrow">Saphirus</p>
-            <h2>Textiles, ambientes, auto y equipos.</h2>
+            <h2>Textiles, aerosoles, difusores, sahumerios y más.</h2>
           </div>
           <p className="section-note">
             Los precios son de referencia. La entrega se acuerda después de hacer el pedido.

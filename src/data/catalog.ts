@@ -1,12 +1,30 @@
 import type { Product } from "../types";
+import { saphirusLine } from "./saphirusLine";
 
 export const saphirusCategories = [
   { id: "todos", label: "Todo" },
   { id: "textiles", label: "Textiles" },
+  { id: "aerosoles", label: "Aerosoles" },
+  { id: "difusores", label: "Difusores" },
+  { id: "difusores-premium", label: "Difusores premium" },
+  { id: "difusores-60", label: "Difusores 60 ml" },
+  { id: "home-spray", label: "Home spray" },
+  { id: "sensaciones", label: "Sensaciones" },
   { id: "ambientes", label: "Ambientes" },
-  { id: "auto", label: "Para el auto" },
-  { id: "equipos", label: "Equipos" },
+  { id: "sahumerios", label: "Sahumerios" },
+  { id: "sahumerios-masala", label: "Masala" },
+  { id: "sahumerios-hierbas", label: "Hierbas" },
+  { id: "sahumerios-himalaya", label: "Himalaya" },
   { id: "aceites", label: "Aceites" },
+  { id: "antihumedad", label: "Antihumedad" },
+  { id: "sanitizantes", label: "Sanitizantes" },
+  { id: "auto", label: "Para el auto" },
+  { id: "route-66", label: "Route 66" },
+  { id: "caritas", label: "Caritas" },
+  { id: "equipos", label: "Equipos" },
+  { id: "pack-premium", label: "Pack premium" },
+  { id: "holders", label: "Holders" },
+  { id: "hornillos", label: "Hornillos" },
   { id: "favoritos", label: "Favoritos" },
 ] as const;
 
@@ -456,6 +474,7 @@ export const products: Product[] = [
     variants: ["Paula + Paula", "Hawaii + Hawaii", "Tropical + Tropical"],
     variantLabel: "Aroma",
   },
+  ...saphirusLine,
 ];
 
 export const productById = Object.fromEntries(products.map((p) => [p.id, p])) as Record<
