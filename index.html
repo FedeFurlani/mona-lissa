@@ -1,24 +1,288 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/mona-lissa/images/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta
-      name="description"
-      content="Mona Lissa Fragancias. Catálogo de Saphirus y Avon. Armá tu pedido y coordiná entrega por WhatsApp con Ana."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <title>Mona Lissa Fragancias</title>
-    <script type="module" crossorigin src="/mona-lissa/assets/index-Dj97FMgz.js"></script>
-    <link rel="stylesheet" crossorigin href="/mona-lissa/assets/index-DF4TF0Uh.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mona Lissa | Fragancias Saphirus y Avon</title>
+    <meta name="description" content="Ana, revendedora de fragancias Saphirus y Avon en San Juan. Mirá el catálogo y coordinamos la entrega.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ml-rose': '#c23b6e',
+                        'ml-wine': '#8d2348',
+                        'ml-plum': '#7a3e62',
+                        'ml-cream': '#fdf8f6',
+                        'ml-dark': '#2a1a22',
+                    },
+                    fontFamily: {
+                        serif: ['Outfit', 'sans-serif'],
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            },
+            safelist: [
+                'bg-ml-rose', 'hover:bg-ml-wine', 'text-ml-rose', 'text-ml-plum', 'text-ml-cream',
+                'text-ml-dark', 'bg-ml-dark', 'bg-ml-cream', 'bg-ml-dark/70', 'text-ml-dark/80',
+                'text-ml-dark/70', 'border-ml-rose', 'border-l-ml-rose', 'to-ml-cream',
+                'bg-rose-50', 'bg-rose-100', 'border-rose-100', 'border-rose-200', 'from-rose-50',
+                'hover:bg-rose-50', 'bg-white/20', 'bg-white/90', 'text-white/80',
+                'border-l-4', 'bg-yellow-400', 'bg-emerald-600', 'hover:bg-emerald-800'
+            ]
+        }
+    </script>
+    <style>
+        body {
+            background-color: #fdf8f6;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c23b6e' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .hero-bg {
+            background-color: #c23b6e;
+            background-image: linear-gradient(135deg, #c23b6e 0%, #8d2348 100%);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .portada-slide { opacity: 0; transition: opacity 0.7s ease; }
+        .portada-slide.activa { opacity: 1; }
+        .cta-frase { display: inline-block; transition: opacity .45s ease; }
+        .cta-frase.sale { opacity: 0; }
+        .pedido-pop { animation: pedido-pop .28s ease; }
+        @keyframes pedido-pop {
+            from { transform: translateX(-50%) scale(.72); }
+            to { transform: translateX(-50%) scale(1); }
+        }
+        .entrega-slide { height: 1.5em; overflow: hidden; position: relative; }
+        .entrega-slide-pista { transition: transform .55s cubic-bezier(.22, 1, .36, 1); }
+        .entrega-slide-item {
+            height: 1.5em;
+            line-height: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            white-space: nowrap;
+        }
+        .entrega-slide-item i { width: 1em; text-align: center; }
+    </style>
+</head>
+<body class="font-sans text-ml-dark overflow-x-hidden relative">
+
+    <nav class="bg-white shadow-md fixed w-full z-40 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#inicio" class="font-serif text-xl sm:text-2xl font-extrabold text-ml-rose flex items-center gap-2">
+                        <span class="h-12 w-12 rounded-full bg-rose-50 text-ml-rose flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-spray-can"></i>
+                        </span>
+                        Mona Lissa
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#inicio" class="text-ml-dark hover:text-ml-rose px-3 py-2 rounded-md text-sm font-medium transition-colors">Inicio</a>
+                    <a href="#lista" class="text-ml-dark hover:text-ml-rose px-3 py-2 rounded-md text-sm font-medium transition-colors">Pedido</a>
+                    <a href="#nosotros" class="text-ml-dark hover:text-ml-rose px-3 py-2 rounded-md text-sm font-medium transition-colors">Ana</a>
+                </div>
+                <div>
+                    <button onclick="toggleCart()" class="relative bg-ml-rose hover:bg-ml-wine text-white p-3 rounded-full transition-colors flex items-center justify-center shadow-md" aria-label="Ver pedido">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span id="cart-count-nav" class="absolute -top-1 -right-1 bg-yellow-400 text-ml-dark text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border border-white hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <button id="pedido-flotante" type="button" onclick="toggleCart()" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 hidden items-center gap-2 bg-ml-rose text-white h-14 pl-4 pr-5 rounded-full shadow-2xl" aria-label="Ver pedido">
+        <i class="fa-solid fa-basket-shopping text-lg"></i>
+        <span class="font-semibold text-sm">Pedido</span>
+        <span id="flotante-cant" class="bg-yellow-400 text-ml-dark text-xs font-bold min-w-[1.25rem] h-5 px-2 rounded-full inline-flex items-center justify-center">$0</span>
+    </button>
+
+    <div id="producto-modal" class="fixed inset-0 z-[60] hidden items-end sm:items-center justify-center bg-black/40 p-3 sm:p-6" onclick="if (event.target === this) cerrarProducto()">
+        <div class="bg-white w-full max-w-md max-h-[72vh] overflow-y-auto rounded-3xl shadow-2xl relative">
+            <button type="button" onclick="cerrarProducto()" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 text-ml-dark shadow flex items-center justify-center" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="producto-foto" alt="" class="w-full h-28 sm:h-56 object-cover bg-rose-50 hidden">
+            <div class="p-4 sm:p-6">
+                <p id="producto-seccion" class="text-[11px] uppercase tracking-widest text-ml-plum font-semibold"></p>
+                <h2 id="producto-nombre" class="font-serif text-xl sm:text-3xl font-extrabold mt-0.5 leading-tight"></h2>
+                <p id="producto-masa" class="text-sm text-ml-rose font-semibold mt-1"></p>
+                <p id="producto-precio" class="text-lg sm:text-2xl font-bold mt-1"></p>
+                <p id="producto-desc" class="text-sm text-gray-600 mt-2"></p>
+                <ul id="producto-datos" class="mt-3 space-y-1 text-xs text-gray-600"></ul>
+                <div id="producto-accion" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="aviso" class="fixed inset-0 z-[70] hidden items-end sm:items-center justify-center bg-black/40 p-3" onclick="if (event.target === this) cerrarAviso()">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-5" role="dialog" aria-modal="true" aria-labelledby="aviso-titulo">
+            <h2 id="aviso-titulo" class="font-serif text-2xl font-extrabold text-ml-rose"></h2>
+            <p id="aviso-texto" class="text-sm text-gray-600 mt-2 whitespace-pre-line"></p>
+            <div id="aviso-detalle" class="mt-3 space-y-1 text-sm"></div>
+            <div id="aviso-acciones" class="mt-5 flex gap-2"></div>
+        </div>
+    </div>
+
+    <div id="cart-overlay" class="fixed inset-0 bg-black/50 z-50 hidden transition-opacity opacity-0 backdrop-blur-sm" onclick="toggleCart()"></div>
+
+    <div id="cart-modal" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <h2 class="font-serif text-2xl font-extrabold text-ml-rose flex items-center gap-2">
+                <i class="fa-solid fa-basket-shopping"></i> Tu Pedido
+            </h2>
+            <div class="flex items-center gap-3">
+                <button onclick="clearCart()" id="btn-clear-cart" class="text-sm text-ml-rose hover:text-ml-wine hidden font-medium items-center gap-1 bg-rose-50 px-2 py-1 rounded">
+                    <i class="fa-solid fa-trash-can"></i> Vaciar
+                </button>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-ml-rose text-2xl p-1" aria-label="Cerrar pedido">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div id="cart-items" class="flex-grow overflow-y-auto p-6">
+            <div class="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
+                <i class="fa-solid fa-cart-arrow-down text-5xl"></i>
+                <p>Tu pedido está vacío</p>
+            </div>
+        </div>
+        <div class="p-6 border-t bg-gray-50">
+            <div class="flex items-end justify-between mb-3">
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-gray-400">Total</p>
+                    <p id="pedido-nota" class="text-xs text-gray-400"></p>
+                </div>
+                <p id="pedido-monto" class="font-serif text-2xl font-extrabold text-ml-dark">$0</p>
+            </div>
+            <button onclick="sendOrder()" id="btn-send-order" data-enviar-pedido class="w-full bg-emerald-600 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                <span id="btn-send-label">Enviar pedido</span>
+            </button>
+            <div class="entrega-slide text-sm font-semibold text-ml-rose mt-3 mx-auto w-fit" data-entrega-slide aria-live="polite">
+                <div class="entrega-slide-pista">
+                    <p class="entrega-slide-item justify-center">Coordinamos entrega</p>
+                    <p class="entrega-slide-item justify-center">Consultá los catálogos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="inicio" class="hero-bg text-white pt-28 pb-10 md:pb-12 relative overflow-hidden">
+        <div class="absolute -bottom-10 -right-10 text-white/10">
+            <i class="fa-solid fa-spray-can text-[16rem]"></i>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                <div class="text-center lg:text-left">
+                    <span id="hero-ubicacion" class="uppercase tracking-widest text-sm font-semibold text-ml-cream/80 mb-2 block">San Juan, Argentina</span>
+                    <h1 class="font-serif text-4xl md:text-5xl font-extrabold mb-3 leading-tight">
+                        <span id="hero-titulo">Mona</span> <br>
+                        <span id="hero-titulo-italic" class="font-extrabold">Lissa</span>
+                    </h1>
+                    <p id="hero-subtitulo" class="text-base md:text-lg text-ml-cream/90 mb-2 font-light max-w-lg mx-auto lg:mx-0">
+                        Revendedora oficial de Saphirus y Avon.
+                    </p>
+                    <p id="hero-frase" class="text-sm md:text-base text-ml-cream/80 mb-5 font-light max-w-lg mx-auto lg:mx-0">
+                        Fragancias para tu hogar y para vos.
+                    </p>
+                    <a href="#lista" class="bg-white text-ml-rose hover:bg-rose-50 px-6 py-2.5 rounded-full font-semibold transition-colors inline-flex items-center justify-center shadow-xl min-w-[15.5rem]">
+                        <span id="cta-frase" class="cta-frase">Ver el catálogo</span>
+                    </a>
+                </div>
+                <div id="portada" class="relative h-36 sm:h-48 lg:h-56 max-w-md mx-auto w-full">
+                    <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=900&q=80" alt="Rosas" class="portada-slide activa absolute inset-0 w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/20 bg-rose-200">
+                    <img src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?auto=format&fit=crop&w=900&q=80" alt="Flores rosas" class="portada-slide absolute inset-0 w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/20 bg-rose-200">
+                    <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=900&q=80" alt="Flores" class="portada-slide absolute inset-0 w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/20 bg-rose-200">
+                    <div id="portada-dots" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10"></div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 w-full leading-none z-20">
+            <svg class="block w-full h-12 md:h-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,137.9,127,213,121.75,252.79,119.06,291.68,103.54,321.39,56.44Z" fill="#fdf8f6"></path>
+            </svg>
+        </div>
+    </section>
+
+    <section id="lista" class="py-12 scroll-mt-28">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-8">
+                <p id="lista-eyebrow" class="text-xs uppercase tracking-[0.28em] text-ml-plum font-semibold">Catálogo</p>
+                <h2 id="lista-titulo" class="font-serif text-4xl font-extrabold text-ml-rose mt-2">Armá tu pedido</h2>
+                <div class="h-1 w-24 bg-ml-plum mx-auto rounded mt-4"></div>
+                <p id="lista-descripcion" class="mt-4 text-gray-600 text-sm">Tocá + y listo. Después abrís el pedido y lo mandás por mensaje.</p>
+            </div>
+            <div id="lista-pedido" class="space-y-6">
+                <p class="text-center text-gray-500 py-10">Cargando catálogo…</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-ml-dark text-white py-12 border-y-4 border-ml-rose">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/10">
+                <div class="py-4 md:py-0 px-4">
+                    <i class="fa-solid fa-spray-can text-4xl text-rose-300 mb-4"></i>
+                    <h3 class="font-serif text-xl font-extrabold mb-2">Saphirus</h3>
+                    <p class="text-gray-300 text-sm">Aromatizadores textiles para la ropa y los ambientes.</p>
+                </div>
+                <div class="py-4 md:py-0 px-4">
+                    <i class="fa-solid fa-book-open text-4xl text-rose-200 mb-4"></i>
+                    <h3 class="font-serif text-xl font-extrabold mb-2">Avon</h3>
+                    <p class="text-gray-300 text-sm">Pedime el catálogo de la campaña y te ayudo a elegir.</p>
+                </div>
+                <div class="py-4 md:py-0 px-4">
+                    <i class="fa-solid fa-heart text-4xl text-ml-rose mb-4"></i>
+                    <h3 class="font-serif text-xl font-extrabold mb-2">Entrega</h3>
+                    <p class="text-gray-300 text-sm">Coordinamos la entrega cuando armes el pedido.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="nosotros" class="bg-white py-16 border-t border-gray-200 scroll-mt-36 md:scroll-mt-28">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <p id="nosotros-eyebrow" class="text-xs uppercase tracking-[0.28em] text-ml-plum font-semibold">Hola</p>
+                    <h2 id="nosotros-titulo" class="font-serif text-4xl font-extrabold text-ml-rose mt-2">Soy Ana</h2>
+                    <p id="nosotros-cuerpo" class="text-gray-600 mt-4">Soy revendedora oficial de Saphirus y Avon. Te ayudo a elegir fragancias para tu casa y para vos, y coordinamos la entrega.</p>
+                </div>
+                <div class="w-full max-w-sm mx-auto aspect-square rounded-3xl bg-rose-50 text-ml-rose flex items-center justify-center border border-rose-100">
+                    <i class="fa-solid fa-spray-can text-8xl"></i>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 mt-8 text-gray-700 justify-center items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-location-dot text-ml-rose text-xl"></i>
+                    <span data-contacto-ciudad>San Juan, Argentina</span>
+                </div>
+                <a data-contacto-link href="https://instagram.com/monalissa_sj" target="_blank" rel="noopener" class="flex items-center gap-3 text-ml-plum font-semibold">
+                    <i data-contacto-icono class="fa-brands fa-instagram text-xl"></i>
+                    <span data-contacto-wa>@monalissa_sj</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white pb-24 md:pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-gray-500">© 2026 Mona Lissa. Todos los derechos reservados.</p>
+                <a href="https://instagram.com/monalissa_sj" target="_blank" rel="noopener" class="text-gray-400 hover:text-ml-rose transition-colors" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
